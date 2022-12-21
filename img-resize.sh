@@ -43,11 +43,11 @@ export BUFFER_SIZE=16000000
 find "$path" \
    -not -path '*/.*' \
    -type f \
-   -mtime "$mtime" \
+   -mtime $mtime \
    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
    -print0 \
    | while IFS= read -r -d '' file; do
       # Resize larger images to the specified dimension
       # Quiet mode (only print error messages)
-      mogrify -resize "$dimension>" -quiet "$file"
+      mogrify -resize $dimension> -quiet "$file"
    done

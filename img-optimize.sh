@@ -41,7 +41,7 @@ mtime=${mtime:-"-7"}
 # Only include files with the .jpg or .jpeg extension.
 # Print the names of the matching files, separated by null characters.
 # Pipe the names to xargs, which will pass them as arguments to jpegoptim.
-find $path \
+find "$path" \
    -not -path '*/.*' \
    -type f \
    -mtime $mtime \
@@ -56,7 +56,7 @@ find $path \
 # Only include files with the .png extension.
 # Print the names of the matching files, separated by null characters.
 # Pipe the names to xargs, which will pass them as arguments to pngquant.
-find $path \
+find "$path" \
    -not -path '*/.*' \
    -type f \
    -mtime $mtime \

@@ -7,21 +7,31 @@ hash cwebp 2>/dev/null || {
 }
 
 # Initialize variables to hold the values of the "path" and "mtime" options
-# path=""
+path=""
 # dimension=""
 
+# Process command-line options
+while [ "$1" != "" ]; do
+    case "$1" in
+        -p|--path)      path="$2"; shift;;
+        # -d|--dimension) dimension="$2"; shift;;
+        *) echo "Error: Unknown option $1"; exit 1;;
+    esac
+    shift
+done
+
 # Check if a directory was specified
-if [ $# -eq 0 ]; then
-  echo "Error: No directory specified."
+[ -z "$path" ] && {
+  echo "Error: No path provided"
   exit 1
-fi
+}
 
 
 # source: https://www.digitalocean.com/community/tutorials/how-to-create-and-serve-webp-images-to-speed-up-your-website
 
 
 # convert JPEG images
-find $1 -type f -and \( -iname "*.jpg" -o -iname "*.jpeg" \) \
+find "$path" -type f -and \( -iname "*.jpg" -o -iname "*.jpeg" \) \
 -exec bash -c '
 webp_path="$0.webp";
 if [ ! -f "$webp_path" ]; then 
@@ -30,7 +40,7 @@ fi;' {} \;
 
 
 # convert PNG images
-find $1 -type f -and -iname "*.png" \
+find "$path" -type f -and -iname "*.png" \
 -exec bash -c '
 webp_path="$0.webp";
 if [ ! -f "$webp_path" ]; then 
