@@ -1,20 +1,26 @@
 #!/bin/bash
 
-# Check if cwebp is installed
+# Check if webp is installed
 hash cwebp 2>/dev/null || {
-   echo "Error: cwebp not found"
+   echo "Error: webp not found"
    exit 1
 }
 
+# # Check if imagemagick is installed
+# hash identify 2>/dev/null || {
+#    echo "Error: imagemagick not found"
+#    exit 1
+# }
+
 # Initialize variables to hold the values of the "path" and "mtime" options
 path=""
-# dimension=""
+# maxwidth=""
 
 # Process command-line options
 while [ "$1" != "" ]; do
     case "$1" in
         -p|--path)      path="$2"; shift;;
-        # -d|--dimension) dimension="$2"; shift;;
+        # -w|--max-width) maxwidth="$2"; shift;;
         *) echo "Error: Unknown option $1"; exit 1;;
     esac
     shift
@@ -48,8 +54,7 @@ if [ ! -f "$webp_path" ]; then
 fi;' {} \;
 
 
-# shortcomings
-#
-# 1) cwebp has the resize option but it will apply the resize to all sizes.  Not just dimensions that are bigger
-# possible workaround but has errors and maybe slow
-# find images -type f -iname '*.webp' | xargs -I {} identify -format '%w %i\n' {} | awk '$1 > 2048 {print $2}' | xargs -0 cwebp -resize $dimension 0 
+# # shortcoming: cwebp has the resize option but it will apply the resize to all sizes.  Not just dimensions that are bigger
+# # workaround 1: run the resize script before this one
+# # workaround 2: find large images with identify and resize those (** !! UNTESTED !! **)
+# find "$path" -type f -iname '*.webp' | xargs -I {} identify -format '%w %i\n' {} | awk '$1 > $maxwidth {print $2}' | xargs -0 cwebp -resize $maxwidth 0

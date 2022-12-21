@@ -8,7 +8,7 @@ hash mogrify 2>/dev/null || {
 
 # Initialize variables to hold the values of the "path" and "mtime" options
 path=""
-dimension=""
+maxwidth=""
 mtime=""
 
 # Process command-line options
@@ -16,7 +16,7 @@ while [ "$1" != "" ]; do
     case "$1" in
         -p|--path)      path="$2"; shift;;
         -t|--mtime)     mtime="$2"; shift;;
-        -d|--dimension) dimension="$2"; shift;;
+        -w|--max-width) maxwidth="$2"; shift;;
         *) echo "Error: Unknown option $1"; exit 1;;
     esac
     shift
@@ -30,7 +30,7 @@ done
 
 # Set defaults
 mtime=${mtime:-"-7"}
-dimension=${dimension:-"2560"}
+maxwidth=${maxwidth:-"2560"}
 
 # address a "I/O error : buffer full" output
 export BUFFER_SIZE=16000000
@@ -47,7 +47,7 @@ find "$path" \
    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
    -print0 \
    | while IFS= read -r -d '' file; do
-      # Resize larger images to the specified dimension
+      # Resize larger images to the specified max width
       # Quiet mode (only print error messages)
-      mogrify -resize "$dimension>" -quiet "$file"
+      mogrify -resize "$maxwidth>" -quiet "$file"
    done
