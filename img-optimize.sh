@@ -47,7 +47,7 @@ find "$path" \
    -mtime $mtime \
    \( -iname '*.jpg' -o -iname '*.jpeg' \) \
    -print0 \
-   | xargs -0 jpegoptim -q --strip-all --max=80
+   | xargs -0 jpegoptim -q --strip-all --max=82
 
 
 # Find all regular files in the specified directory and its subdirectories that are not hidden
