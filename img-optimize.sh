@@ -14,7 +14,6 @@ hash pngquant 2>/dev/null || {
 
 # Initialize variables to hold the values of the "path" and "mtime" options
 path=""
-dimension=""
 mtime=""
 
 # Process command-line options
@@ -22,7 +21,6 @@ while [ "$1" != "" ]; do
     case "$1" in
         -p|--path)      path="$2"; shift;;
         -t|--mtime)     mtime="$2"; shift;;
-        -d|--dimension) dimension="$2"; shift;;
         *) echo "Error: Unknown option $1"; exit 1;;
     esac
     shift
@@ -36,7 +34,6 @@ done
 
 # Set defaults
 mtime=${mtime:-"-7"}
-dimension=${dimension:-"2048"}
 
 # Find all regular files in the specified directory and its subdirectories that are not hidden
 # and have been modified within the specified number of days.
@@ -44,12 +41,12 @@ dimension=${dimension:-"2048"}
 # Only include files with the .jpg or .jpeg extension.
 # Print the names of the matching files, separated by null characters.
 # Pipe the names to xargs, which will pass them as arguments to jpegoptim.
-find "$path" \
+find $path \
    -not -path '*/.*' \
    -type f \
-   -mtime "$mtime" \
-   -print0 \
+   -mtime $mtime \
    \( -iname '*.jpg' -o -iname '*.jpeg' \) \
+   -print0 \
    | xargs -0 jpegoptim -q --strip-all --max=80
 
 
@@ -59,10 +56,10 @@ find "$path" \
 # Only include files with the .png extension.
 # Print the names of the matching files, separated by null characters.
 # Pipe the names to xargs, which will pass them as arguments to pngquant.
-find "$path" \
+find $path \
    -not -path '*/.*' \
    -type f \
-   -mtime "$mtime" \
-   -print0 \
+   -mtime $mtime \
    -iname '*.png' \
+   -print0 \
    | xargs -0 pngquant -q --force --ext .png --quality=80-95 --strip --skip-if-larger
