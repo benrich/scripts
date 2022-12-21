@@ -30,7 +30,7 @@ done
 
 # Set defaults
 mtime=${mtime:-"-7"}
-dimension=${dimension:-"2048"}
+dimension=${dimension:-"2560"}
 
 # address a "I/O error : buffer full" output
 export BUFFER_SIZE=16000000
