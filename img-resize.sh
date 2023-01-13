@@ -39,7 +39,7 @@ export BUFFER_SIZE=16000000
 # Exclude hidden files and directories (those that start with a dot)
 # Only include regular files
 # Only include files modified within the specified number of days
-# Only include files with the .jpg, .jpeg, or .png extension
+# Only include files with the .jpg, .jpeg or .png extension
 find "$path" \
    -not -path '*/.*' \
    -type f \
@@ -47,7 +47,16 @@ find "$path" \
    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) \
    -print0 \
    | while IFS= read -r -d '' file; do
-      # Resize larger images to the specified max width
+      # skip images with widths less than the max width
+      width=$(identify -format "%w" "$file")
+      if [ "$width" -le "$maxwidth" ]; then
+         continue
+      fi
+      
+      # Resize remaining images to the specified max width
       # Quiet mode (only print error messages)
+      # note: resize includes ">" just in case a smaller files creeps in (shouldn't happen).
+      #       The reason identify is used above, to determine the width, is because mogrify
+      #       rewrites all images even if they're smaller than max-width.
       mogrify -resize "$maxwidth>" -quiet "$file"
    done
